@@ -1,7 +1,61 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Recommendation</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            margin: 40px;
+            color: #333;
+        }
+        h1 {
+            color: #5a5a5a;
+        }
+        button {
+            background-color: #8c8c8c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px 0;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #666666;
+        }
+        div, .book {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 5px;
+        }
+        .book img {
+            float: left;
+            margin-right: 10px;
+            height: 100px;
+        }
+        .book-title {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .book-author {
+            font-size: 14px;
+        }
+        .book-details {
+            font-size: 12px;
+        }
+        .book-rating {
+            font-size: 14px;
+            color: #008000;
+        }
+        .clear {
+            clear: both;
+        }
+    </style>
 </head>
 <body>
     <h1>Book Recommendation System</h1>
@@ -25,7 +79,23 @@
                     fetch(`/${userID}/ratings/top/${count}`)
                         .then(response => response.json())
                         .then(data => {
-                            document.getElementById("topRatingsResult").innerHTML = "<pre>" + JSON.stringify(data, null, 2) + "</pre>";
+                            var container = document.getElementById("topRatingsResult");
+                            container.innerHTML = '';
+                            data.forEach(book => {
+                                var bookDiv = document.createElement('div');
+                                bookDiv.className = 'book';
+                                bookDiv.innerHTML = `
+                                    <img src="${book.URL}" alt="Book cover">
+                                    <div>
+                                        <div class="book-title">${book.Title}</div>
+                                        <div class="book-author">Author: ${book.Author}</div>
+                                        <div class="book-details">Year: ${book.Year} | Publisher: ${book.Publisher}</div>
+                                        <div class="book-rating">Rating: ${book.Rating.toFixed(2)} (${book.Count} ratings)</div>
+                                    </div>
+                                    <div class="clear"></div>
+                                `;
+                                container.appendChild(bookDiv);
+                            });
                         })
                         .catch(error => console.error('Error:', error));
                 }
@@ -56,7 +126,6 @@
                         document.getElementById("ratingsResult").innerHTML = "<pre>" + JSON.stringify(data, null, 2) + "</pre>";
                     })
                     .catch(error => console.error('Error:', error));
-
                 }
             });
 
